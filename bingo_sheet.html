@@ -134,6 +134,10 @@
             checkBingo();
         }
 
+        /*
+        縦横斜めそれぞれにビンゴしているかどうかのチェックを行う
+        ビンゴ時はビンゴしたマスをハイライト表示に変更する
+        */
         function checkBingo() {
             const cells = document.querySelectorAll('.bingo-cell');
             const rows = [[], [], []];
@@ -184,6 +188,7 @@
             }
         }
 
+        // ローカルストレージに保存されたビンゴデータを削除する (入力内容はリセットされない)
         function clearBingoData() {
             document.querySelectorAll('.bingo-cell input').forEach((input, i) => {
                 localStorage.removeItem(`bingo-input-${i}`);
