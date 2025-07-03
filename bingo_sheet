@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名前ビンゴ！</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #F5FFFA;
+        }
+        h1 {
+            color: #1b1c1d;
+            margin-bottom: 20px;
+        }
+        .bingo-card {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .bingo-cell {
+            border: 5px solid #AFEEEE;
+            padding: 20px;
+            background-color: #E0FFFF;
+            position: relative;
+        }
+        .bingo-cell input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .hit-button {
+            background-color: #D3D3D3;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .hit-button.hit {
+            background-color: #FF4500;
+        }
+        .highlight {
+            background-color: #FFD700 !important;
+        }
+        .bingo-count {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        @keyframes hitEffect {
+            0%   { transform: scale(1); background-color: #FF9999; }
+            50%  { transform: scale(1.2); background-color: #FF6666; }
+            100% { transform: scale(1); background-color: #FF0000; }
+        }
+
+        .hit-button.animate-hit {
+            animation: hitEffect 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>名前ビンゴ！</h1>
+    </br>
+    <div class="bingo-card">
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+        <div class="bingo-cell">
+            <input type="text" placeholder="チーム名">
+            <input type="text" placeholder="名前">
+            <button class="hit-button" onclick="toggleHit(this)">Hit!</button>
+        </div>
+    </div>
+
+    <div class="bingo-count">ビンゴ数: <span id="bingoCount">0</span></div>
+    <div id="bingoMessage" style="margin-top: 30px; font-size: 72px; color: red; font-weight: bold;"></div>
+
+    </br>
+    <button onclick="clearBingoData()">入力データをローカルから削除</button>
+
+    <script>
+        function toggleHit(button) {
+            button.classList.toggle('hit');
+            button.classList.add('animate-hit');
+
+            // アニメーション終了後にクラスを削除（再利用可能にする）
+            button.addEventListener('animationend', () => {
+                button.classList.remove('animate-hit');
+            }, { once: true });
+
+            checkBingo();
+        }
+
+        function checkBingo() {
+            const cells = document.querySelectorAll('.bingo-cell');
+            const rows = [[], [], []];
+            const cols = [[], [], []];
+            const diagonals = [[], []];
+
+            cells.forEach((cell, index) => {
+                const row = Math.floor(index / 3);
+                const col = index % 3;
+                rows[row].push(cell);
+                cols[col].push(cell);
+                if (row === col) diagonals[0].push(cell);
+                if (row + col === 2) diagonals[1].push(cell);
+            });
+
+            let bingoCount = 0;
+
+
+            // 一旦すべてのハイライトを消す
+            cells.forEach(cell => cell.classList.remove('highlight'));
+
+
+            function checkLine(line) {
+                const isBingo = line.every(cell => {
+                    const button = cell.querySelector('.hit-button');
+                    return button && button.classList.contains('hit');
+                });
+
+                if (isBingo) {
+                    line.forEach(cell => cell.classList.add('highlight'));
+                    bingoCount++;
+                }
+            }
+
+            rows.forEach(checkLine);
+            cols.forEach(checkLine);
+            diagonals.forEach(checkLine);
+
+            document.getElementById('bingoCount').textContent = bingoCount;
+
+            const bingoMessage = document.getElementById('bingoMessage');
+            if (bingoCount == 8){
+                bingoMessage.textContent = 'COMPLETE!';
+            } else if (bingoCount > 0) {
+                bingoMessage.textContent = 'BINGO!';
+            } else {
+                bingoMessage.textContent = '';
+            }
+        }
+
+        function clearBingoData() {
+            document.querySelectorAll('.bingo-cell input').forEach((input, i) => {
+                localStorage.removeItem(`bingo-input-${i}`);
+            });
+        }
+
+        // 入力が変更されたらローカルストレージに保存
+        document.querySelectorAll('.bingo-cell input').forEach((input, i) => {
+            input.addEventListener('input', () => {
+                localStorage.setItem(`bingo-input-${i}`, input.value);
+            });
+        });
+
+        // ページ読み込み時に復元
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.bingo-cell input').forEach((input, i) => {
+                const saved = localStorage.getItem(`bingo-input-${i}`);
+                if (saved !== null) {
+                    input.value = saved;
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
