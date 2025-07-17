@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>名前ビンゴ！</title>
+
     <style>
         body {
             font-family: sans-serif;
@@ -17,29 +18,33 @@
         .bingo-card {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            max-width: 600px;
+            gap: 8px;
+            max-width: 320px;
+            width: 100%;
             margin: 0 auto;
         }
         .bingo-cell {
-            border: 5px solid #AFEEEE;
-            padding: 20px;
+            border: 3px solid #AFEEEE;
+            padding: 10px;
             background-color: #E0FFFF;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .bingo-cell input[type="text"] {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 5px;
-            font-size: 16px;
+            width: 90%;
+            margin-bottom: 6px;
+            padding: 4px;
+            font-size: 14px;
         }
         .hit-button {
             background-color: #D3D3D3;
             color: #fff;
             border: none;
-            padding: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
+            padding: 6px 10px;
         }
         .hit-button.hit {
             background-color: #FF4500;
@@ -66,7 +71,8 @@
 </head>
 <body>
     <h1>名前ビンゴ！</h1>
-    </br>
+    <div id="bingoMessage" style="font-size: 72px; color: red; font-weight: bold;"></div>
+
     <div class="bingo-card">
         <div class="bingo-cell">
             <input type="text" placeholder="チーム名">
@@ -116,8 +122,6 @@
     </div>
 
     <div class="bingo-count">ビンゴ数: <span id="bingoCount">0</span></div>
-    <div id="bingoMessage" style="margin-top: 30px; font-size: 72px; color: red; font-weight: bold;"></div>
-
     </br>
     <button onclick="clearBingoData()">入力データをローカルから削除</button>
 
